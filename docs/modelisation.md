@@ -18,6 +18,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 - **Granularité** : une ligne = une référence article d'une commande ; reliée à un client, à un employé, à un bureau et à un produit
 - **Rôle** : Recenser toutes les ventes d'articles
 - **Colonnes** :
+
  |  Colonne        | Origine (table.colonne)                                     | Rôle                    |
  | ----------------|-------------------------------------------------------------|-------------------------|
  | orderNumber     | `orders.orderNumber`                                        | Numéro de commande      |
@@ -36,6 +37,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 - **Granularité** : une ligne = un paiement ; reliée à un client, à un employé et à un bureau
 - **Rôle** : Recenser tous les paiements des clients
 - **Colonnes** :
+
  | Colonne        | Origine (table.colonne)                                       | Rôle                    |
  | ---------------|---------------------------------------------------------------|-------------------------|
  | checkNumber    | `payments.checkNumber`                                        | Identifiant du paiement |
@@ -51,6 +53,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_customers`
 - **Rôle** : Recense tous les clients
 - **Colonnes** :
+
  |  Colonne              | Origine (table.colonne)                  | Rôle                              |
  | ----------------------|------------------------------------------|-----------------------------------|
  | customerNumber        | `customers.customerNumber`               | Clé                               |
@@ -63,6 +66,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_employees`
 - **Rôle** : Recense tous les employés
 - **Colonnes** :
+
  |  Colonne              | Origine (table.colonne)                         | Rôle                       |
  | ----------------------|-------------------------------------------------|----------------------------|
  | employeeNumber        | `employees` → `customers.salesRepEmployeeNumber`| Clé                        |
@@ -76,6 +80,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_products`
 - **Rôle** : Recense toutes les références produits
 - **Colonnes** :
+
  |  Colonne              | Origine (table.colonne)                  | Rôle                              |
  | ----------------------|------------------------------------------|-----------------------------------|
  | productCode           | `products.productCode`                   | Clé                               |
@@ -89,6 +94,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_date`
 - **Rôle** : Recense toutes les dates, du 1er janvier 2022 au 31 décembre de l'année la plus récente.
 - **Colonnes** :
+
  |  Colonne        | Origine (table.colonne)            | Rôle                |
  | ----------------|------------------------------------|---------------------|
  | date            | générée                            | Jour                |
