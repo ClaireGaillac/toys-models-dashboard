@@ -106,7 +106,7 @@ On peut voir qu'il y a actuellement 8 tables : customers, employees, offices, or
 - Quels sont les articles les plus vendus ? Les moins vendus ?
 - Quel est l'article le plus cher ? Le moins cher ? Quel est le prix moyen ?
 - Montant de la commande la plus élevée ? La moins élevée ? Nombre d'articles dans ces commandes ?
-- Panier moyen ? Nombre moyen d'articles ?
+- Panier moyen ?
 - Chiffre d'affaires par mois ? Par an ? Par vendeur (évolution) ? Par ville, pays ou zone géographique ?
 - Nombre moyen de références par commande ?
 
@@ -131,7 +131,6 @@ On peut voir qu'il y a actuellement 8 tables : customers, employees, offices, or
 - Il y a 4 statuts : Envoyée, Annulée, Résolue et En attente.
 
 ### ⚠️ À creuser pour la modélisation
-- Y a-t-il des commandes non envoyées ? Avec quels commentaires ?
 - Délai moyen entre le passage de la commande et la date de livraison demandée ?
 - Les commandes sont-elles toujours envoyées avant la date requise ? Sinon, lesquelles ? Pourquoi ?
 - Combien de temps avant la date requise les commandes sont-elles envoyées ?
@@ -158,6 +157,7 @@ On peut voir qu'il y a actuellement 8 tables : customers, employees, offices, or
 ### Observations sur les données
 - Montant total des 249 paiements : 7 953 335,23 $.
 - De 1 128,20 $ à 116 208,40 $ par paiement.
+- Les paiements s'étalent du 31 janvier 2022 au 9 mars 2024.
 
 ### ⚠️ À creuser pour la modélisation
 - Combien de clients ont payé leurs commandes ?

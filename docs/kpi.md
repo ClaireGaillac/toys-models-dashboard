@@ -15,7 +15,8 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 
 **KPI** : Taux d’évolution mensuel : suivre les revenus générés par région et par mois pour identifier les tendances géographiques.
 **Source** : `orderdetails` (`quantityOrdered`, `priceEach`) → `orders` (`orderDate` , `customerNumber`) → `customers.city`
-**Calcul** : `SUM(quantityOrdered * priceEach)` du mois -1an - `SUM(quantityOrdered * priceEach)` du mois 
+**Calcul** : `(SUM(quantityOrdered * priceEach) du mois - SUM(quantityOrdered * priceEach) du mois -1an) / (SUM(quantityOrdered * priceEach) du mois -1an) * 100`
+**Remarque** : Je compare sur une période équivalente de l’année précédente : par exemple, si le mois est en cours et que l'on est le 17, je compare avec le même mois de l'année précédente, du 1er au 17. Je mets n.d. quand il n'y a pas de valeur précédente.
 
 **KPI** : Produits les plus/moins vendus par catégorie.
 **Source** : `orderdetails` (`quantityOrdered`, `productCode`) → `products.productLine`
@@ -68,7 +69,7 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 ### Ventes
 **KPI** : Taux d’évolution mensuel des ventes par catégorie : mesurer la performance de chaque catégorie de produits dans le temps.
 **Source** : `orders` (`orderNumber`, `orderDate`) → `orderdetails` (`quantityOrdered`, `priceEach`, `productCode`) → `products` (`productCode`, `productLine`)
-**Calcul** : `SUM(quantityOrdered * priceEach)` par catégorie, par date (mois, année)
+**Calcul** : `(SUM(quantityOrdered * priceEach) du mois - SUM(quantityOrdered * priceEach) du mois -1an) / (SUM(quantityOrdered * priceEach) du mois -1an) * 100` par catégorie, par date (mois, année)
 
 **KPI** : Panier moyen : mesurer le montant moyen des commandes.
 **Source** : `orderdetails` (`quantityOrdered`, `priceEach`, `orderNumber`)

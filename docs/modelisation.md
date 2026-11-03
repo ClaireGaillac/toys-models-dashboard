@@ -18,7 +18,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 - **Granularité** : une ligne = une référence article d'une commande ; reliée à un client, à un employé, à un bureau et à un produit
 - **Rôle** : Recenser toutes les ventes d'articles
 - **Colonnes** :
-   Colonne         | Origine (table.colonne)                                     | Rôle                    |
+ |  Colonne        | Origine (table.colonne)                                     | Rôle                    |
  | ----------------|-------------------------------------------------------------|-------------------------|
  | orderNumber     | `orders.orderNumber`                                        | Numéro de commande      |
  | customerNumber  | `customers.customerNumber`                                  | Clé vers `dim_customers`|
@@ -36,7 +36,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 - **Granularité** : une ligne = un paiement ; reliée à un client, à un employé et à un bureau
 - **Rôle** : Recenser tous les paiements des clients
 - **Colonnes** :
-   Colonne        | Origine (table.colonne)                                       | Rôle                    |
+ | Colonne        | Origine (table.colonne)                                       | Rôle                    |
  | ---------------|---------------------------------------------------------------|-------------------------|
  | checkNumber    | `payments.checkNumber`                                        | Identifiant du paiement |
  | customerNumber | `payments.customerNumber`                                     | Clé vers `dim_customers`|
@@ -51,7 +51,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_customers`
 - **Rôle** : Recense tous les clients
 - **Colonnes** :
-   Colonne               | Origine (table.colonne)                  | Rôle                              |
+ |  Colonne              | Origine (table.colonne)                  | Rôle                              |
  | ----------------------|------------------------------------------|-----------------------------------|
  | customerNumber        | `customers.customerNumber`               | Clé                               |
  | customerName          | `customers.customerName`                 | Nom du commerce du client         |
@@ -63,7 +63,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_employees`
 - **Rôle** : Recense tous les employés
 - **Colonnes** :
-   Colonne               | Origine (table.colonne)                         | Rôle                       |
+ |  Colonne              | Origine (table.colonne)                         | Rôle                       |
  | ----------------------|-------------------------------------------------|----------------------------|
  | employeeNumber        | `employees` → `customers.salesRepEmployeeNumber`| Clé                        |
  | fullName              | `employees.lastName + employees.firstName`      | Nom complet de l'employé   |
@@ -76,7 +76,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ### `dim_products`
 - **Rôle** : Recense toutes les références produits
 - **Colonnes** :
-   Colonne               | Origine (table.colonne)                  | Rôle                              |
+ |  Colonne              | Origine (table.colonne)                  | Rôle                              |
  | ----------------------|------------------------------------------|-----------------------------------|
  | productCode           | `products.productCode`                   | Clé                               |
  | productName           | `products.productName`                   | Nom du produit                    |
@@ -87,11 +87,11 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
  | MSRP                  | `products.MSRP`                          | Prix de vente conseillé           |
 
 ### `dim_date`
-- **Rôle** : Recense toutes les dates, de la première commande à la dernière
+- **Rôle** : Recense toutes les dates, du 1er janvier 2022 au 31 décembre de l'année la plus récente.
 - **Colonnes** :
-   Colonne         | Origine (table.colonne)            | Rôle                |
+ |  Colonne        | Origine (table.colonne)            | Rôle                |
  | ----------------|------------------------------------|---------------------|
- | date            | générée (première - dernière vente)| Jour                |
+ | date            | générée                            | Jour                |
  | year            | `YEAR(date)`                       | Année               |
  | quarter         | `QUARTER(date)`                    | Trimestre           |
  | month           | `MONTH(date)`                      | Mois                |
@@ -102,15 +102,15 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 
 
 ## Relations
- | De              | Vers            | Cardinalité | Pourquoi                             |
- |-----------------|-----------------|-------------|--------------------------------------|
- | `fact_orders`   | `dim_customers` | 1 à N       | Un client passe des commandes        |
- | `fact_orders`   | `dim_employees` | 1 à N       | Un employé est lié à des commandes   |
- | `fact_orders`   | `dim_products`  | 1 à N       | Une commande contient des produits   |
- | `fact_orders`   | `dim_date`      | 1 à N       | Une date reçoit des commandes        |
- | `fact_payments` | `dim_customers` | 1 à N       | Un client réalise des paiements      |
- | `fact_payments` | `dim_employees` | 1 à N       | Les paiements sont liés à un employé |
- | `fact_payments` | `dim_date`      | 1 à N       | Une date reçoit des paiements        |
+ | De              | Vers            | Cardinalité | Pourquoi                                             |
+ |-----------------|-----------------|-------------|------------------------------------------------------|
+ | `dim_customers` | `fact_orders`   | 1 à N       | Un client passe des commandes                        |
+ | `dim_employees` | `fact_orders`   | 1 à N       | Un employé est rattaché aux commandes de ses clients |
+ | `dim_products`  | `fact_orders`   | 1 à N       | Un produit est dans des commandes                    |
+ | `dim_date`      | `fact_orders`   | 1 à N       | Une date reçoit des commandes                        |
+ | `dim_customers` | `fact_payments` | 1 à N       | Un client réalise des paiements                      |
+ | `dim_employees` | `fact_payments` | 1 à N       | Un employé est rattaché aux paiements de ses clients |
+ | `dim_date`      | `fact_payments` | 1 à N       | Une date reçoit des paiements                        |
 
 ## Décisions de modélisation
 J'ai décidé de fusionner les tables `employees` et `offices` en une seule et même table de dimension. Les analyses par bureau ou par territoire passeront donc par la dimension employés, et non par une dimension bureau dédiée.
@@ -120,3 +120,5 @@ Je fais le choix d'utiliser `salesRepEmployeeNumber` plutôt que `employeeNumber
 J'ai fait le choix de concaténer le prénom et le nom des employés, car ils serviront uniquement à l'affichage. Le nom ou le prénom seul ne serait pas fiable (trop de risques de doublons).
 
 Je mets `status` dans `fact_orders`, ce qui permet notamment de distinguer les montants des commandes annulées pour ne pas les compter dans le CA.
+
+La première commande a été passée le 21/01/2022 et le dernier paiement a eu lieu le 09/03/2024 : ce sont respectivement la première et la dernière action enregistrées. Les fonctions temporelles de Power BI nécessitant des années complètes, je générerai donc les dates du 1er janvier 2022 au 31 décembre de l'année la plus récente, pour que les dates continuent de se générer au fur et à mesure.
