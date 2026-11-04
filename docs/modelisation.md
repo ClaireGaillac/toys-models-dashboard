@@ -92,18 +92,18 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
  | MSRP                  | `products.MSRP`                          | Prix de vente conseillé           |
 
 ### `dim_date`
-- **Rôle** : Recense toutes les dates, du 1er janvier 2022 au 31 décembre de l'année la plus récente.
+- **Rôle** : Recense tous les jours, du 1er janvier de l'année la plus ancienne au 31 décembre de l'année la plus récente (commandes et paiements confondus), soit actuellement du 01/01/2022 au 31/12/2024 (1 096 jours).
 - **Colonnes** :
 
  |  Colonne        | Origine (table.colonne)            | Rôle                |
  | ----------------|------------------------------------|---------------------|
- | date            | générée                            | Jour                |
- | year            | `YEAR(date)`                       | Année               |
- | quarter         | `QUARTER(date)`                    | Trimestre           |
- | month           | `MONTH(date)`                      | Mois                |
- | month_name      | `DATE_FORMAT(date, '%M')`          | Nom du mois         |
- | day_of_month    | `DAY(date)`                        | Jour dans le mois   |
- | day_name        | `DAYNAME(date)`                    | Jour de la semaine  |
+ | calendarDate    | générée                            | Jour                |
+ | year            | `YEAR(calendarDate)`               | Année               |
+ | quarter         | `QUARTER(calendarDate)`            | Trimestre           |
+ | month           | `MONTH(calendarDate)`              | Mois                |
+ | monthName       | `MONTHNAME(calendarDate)`          | Nom du mois         |
+ | dayOfMonth      | `DAY(calendarDate)`                | Jour dans le mois   |
+ | dayName         | `DAYNAME(calendarDate)`            | Jour de la semaine  |
 
 
 
@@ -127,4 +127,4 @@ J'ai fait le choix de concaténer le prénom et le nom des employés, car ils se
 
 Je mets `status` dans `fact_orders`, ce qui permet notamment de distinguer les montants des commandes annulées pour ne pas les compter dans le CA.
 
-La première commande a été passée le 21/01/2022 et le dernier paiement a eu lieu le 09/03/2024 : ce sont respectivement la première et la dernière action enregistrées. Les fonctions temporelles de Power BI nécessitant des années complètes, je générerai donc les dates du 1er janvier 2022 au 31 décembre de l'année la plus récente, pour que les dates continuent de se générer au fur et à mesure.
+La première commande a été passée le 21/01/2022 et le dernier paiement a eu lieu le 09/03/2024 : ce sont respectivement la première et la dernière action enregistrées. Les fonctions temporelles de Power BI nécessitant des années complètes, je génère donc les dates du 1er janvier de l'année la plus ancienne au 31 décembre de l'année la plus récente. Ces bornes sont calculées à partir des données, et non écrites en dur : le calendrier s'agrandit ainsi automatiquement quand une nouvelle année commence.
