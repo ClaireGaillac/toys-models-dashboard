@@ -59,9 +59,9 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
  | customerNumber        | `customers.customerNumber`               | Clé                               |
  | customerName          | `customers.customerName`                 | Nom du commerce du client         |
  | city                  | `customers.city`                         | Ville                             |
- | state                 | `customers.state`                        | État                              |
  | country               | `customers.country`                      | Pays                              |
  | creditLimit           | `customers.creditLimit`                  | Limite de crédit                  |
+ | territory             | `offices.territory` (via le vendeur)     | Territoire commercial du client   |
 
 ### `dim_employees`
 - **Rôle** : Recense tous les employés
@@ -128,3 +128,5 @@ J'ai fait le choix de concaténer le prénom et le nom des employés, car ils se
 Je mets `status` dans `fact_orders`, ce qui permet notamment de distinguer les montants des commandes annulées pour ne pas les compter dans le CA.
 
 La première commande a été passée le 21/01/2022 et le dernier paiement a eu lieu le 09/03/2024 : ce sont respectivement la première et la dernière action enregistrées. Les fonctions temporelles de Power BI nécessitant des années complètes, je génère donc les dates du 1er janvier de l'année la plus ancienne au 31 décembre de l'année la plus récente. Ces bornes sont calculées à partir des données, et non écrites en dur : le calendrier s'agrandit ainsi automatiquement quand une nouvelle année commence.
+
+Dans `dim_customers`, j'ai retiré `state` (vide pour la plupart des pays, la ville suffit à situer les clients américains) et ajouté `territory`, le territoire du bureau du vendeur attitré. Le territoire "Japan" est regroupé dans "APAC", car le vendeur de Tokyo suit aussi d'autres pays d'Asie-Pacifique. Les clients sans vendeur, qui n'ont passé aucune commande, sont classés "Unassigned" : ce sont des prospects.

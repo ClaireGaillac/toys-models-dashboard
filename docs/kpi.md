@@ -11,7 +11,7 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **KPI** : Chiffre d’affaires par mois et par région
 **Source** : `orderdetails` (`quantityOrdered`, `priceEach`) → `orders` (`orderDate` , `customerNumber`) → `customers.city`
 **Calcul** : `SUM(quantityOrdered * priceEach)` par mois et par zone
-**Remarque** : Il n'y a pas de colonne région. Je crée donc une hiérarchie (ville → état → pays → territoire) dans Power BI (drill-down), qui laisse le directeur choisir son niveau de lecture.
+**Remarque** : Il n'y a pas de colonne région. Je crée donc une hiérarchie (territoire → pays → ville) dans Power BI (drill-down), qui laisse le directeur choisir son niveau de lecture.
 
 **KPI** : Taux d’évolution mensuel : suivre les revenus générés par région et par mois pour identifier les tendances géographiques.
 **Source** : `orderdetails` (`quantityOrdered`, `priceEach`) → `orders` (`orderDate` , `customerNumber`) → `customers.city`
