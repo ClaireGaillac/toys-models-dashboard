@@ -69,13 +69,13 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 
  |  Colonne              | Origine (table.colonne)                         | Rôle                       |
  | ----------------------|-------------------------------------------------|----------------------------|
- | employeeNumber        | `employees` → `customers.salesRepEmployeeNumber`| Clé                        |
+ | employeeNumber        | `employees.employeeNumber`                      | Clé                        |
+ | jobTitle              | `employees.jobTitle`                            | Poste de l'employé         |
  | fullName              | `employees.lastName + employees.firstName`      | Nom complet de l'employé   |
- | officeCode            | `employees.officeCode`                          | Clé vers `offices`         |
- | city                  | `offices.city`                                  | Ville du bureau            |
- | state                 | `offices.state`                                 | État du bureau             |
- | country               | `offices.country`                               | Pays du bureau             |
- | territory             | `offices.territory`                             | Territoire du bureau       |
+ | officeCode            | `employees.officeCode`                          | Code du bureau             |
+ | officeCity            | `offices.city`                                  | Ville du bureau            |
+ | officeCountry         | `offices.country`                               | Pays du bureau             |
+ | officeTerritory       | `offices.territory`                             | Territoire du bureau       |
 
 ### `dim_products`
 - **Rôle** : Recense toutes les références produits
@@ -121,7 +121,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
 ## Décisions de modélisation
 J'ai décidé de fusionner les tables `employees` et `offices` en une seule et même table de dimension. Les analyses par bureau ou par territoire passeront donc par la dimension employés, et non par une dimension bureau dédiée.
 
-Je fais le choix d'utiliser `salesRepEmployeeNumber` plutôt que `employeeNumber`, car `salesRepEmployeeNumber` correspond à l'`employeeNumber` des vendeurs. Ici, seuls les vendeurs m'intéressent pour mon analyse.
+Dans les tables de faits, l'employé est le vendeur attitré du client (`customers.salesRepEmployeeNumber`), qui correspond à l'`employeeNumber` des vendeurs. En revanche, `dim_employees` garde les 23 employés, avec leur poste (`jobTitle`), pour que le volet RH soit complet. J'y ai retiré `state` et préfixé les colonnes du bureau par office (`officeCity`, `officeCountry`, `officeTerritory`) pour ne pas les confondre avec celles du client. Comme pour les clients, "Japan" est regroupé dans "APAC".
 
 J'ai fait le choix de concaténer le prénom et le nom des employés, car ils serviront uniquement à l'affichage. Le nom ou le prénom seul ne serait pas fiable (trop de risques de doublons).
 
