@@ -8,7 +8,7 @@ Construire la chaîne complète : requêtage SQL → modélisation analytique (s
 ## 🗺️ Plan du projet
 - [x] Exploration de la base transactionnelle (OLTP)
 - [x] Conception du schéma en étoile (tables de faits + dimensions)
-- [ ] Création des vues SQL (modèle analytique)
+- [x] Création des vues SQL (modèle analytique)
 - [ ] Import dans Power BI et relations (OLAP)
 - [ ] Mesures DAX (KPI ventes, finances, logistique, RH)
 - [ ] Dashboard interactif avec filtres
