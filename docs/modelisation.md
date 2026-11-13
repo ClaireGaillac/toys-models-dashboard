@@ -5,7 +5,7 @@ L'OLTP est conçu pour garantir l'intégrité des données, mais aussi pour évi
 
 L'OLAP, lui, est conçu pour faciliter l'analyse de ces données : il demande moins de jointures, les analyses sont donc plus rapides. Ici, les redondances sont assumées.
 
-On transforme l'OLTP en OLAP au moyen de vues.
+Je transforme l'OLTP en OLAP au moyen de vues SQL.
 
 
 ## Vue d'ensemble
@@ -32,6 +32,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
  | shippedDate     | `orders.shippedDate`                                        | Date d'envoi            |
  | status          | `orders.status`                                             | État d'avancement       |
  | comments        | `orders.comments`                                           | Commentaire             |
+ | salesAmount     | `quantityOrdered * priceEach`                               | Montant de la ligne     |
 
 ### `fact_payments`
 - **Granularité** : une ligne = un paiement ; reliée à un client, à un employé et à un bureau
@@ -126,6 +127,8 @@ Dans les tables de faits, l'employé est le vendeur attitré du client (`custome
 J'ai fait le choix de concaténer le prénom et le nom des employés, car ils serviront uniquement à l'affichage. Le nom ou le prénom seul ne serait pas fiable (trop de risques de doublons).
 
 Je mets `status` dans `fact_orders`, ce qui permet notamment de distinguer les montants des commandes annulées pour ne pas les compter dans le CA.
+
+J'ajoute dans `fact_orders` la colonne calculée `salesAmount` (`quantityOrdered * priceEach`), le montant de chaque ligne, pour simplifier les mesures DAX. Seuls les calculs ligne par ligne sont faits dans les vues : les ratios et agrégats restent en DAX, pour se recalculer selon les filtres.
 
 La première commande a été passée le 21/01/2022 et le dernier paiement a eu lieu le 09/03/2024 : ce sont respectivement la première et la dernière action enregistrées. Les fonctions temporelles de Power BI nécessitant des années complètes, je génère donc les dates du 1er janvier de l'année la plus ancienne au 31 décembre de l'année la plus récente. Ces bornes sont calculées à partir des données, et non écrites en dur : le calendrier s'agrandit ainsi automatiquement quand une nouvelle année commence.
 
