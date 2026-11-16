@@ -9,10 +9,10 @@ Construire la chaîne complète : requêtage SQL → modélisation analytique (s
 - [x] Exploration de la base transactionnelle (OLTP)
 - [x] Conception du schéma en étoile (tables de faits + dimensions)
 - [x] Création des vues SQL (modèle analytique)
-- [ ] Import dans Power BI et relations (OLAP)
+- [x] Import dans Power BI et relations (OLAP)
 - [ ] Mesures DAX (KPI ventes, finances, logistique, RH)
 - [ ] Dashboard interactif avec filtres
-- [ ] Documentation des choix de modélisation
+- [x] Documentation des choix de modélisation
 
 ## 🔧 Stack
 `SQL (MySQL)` `Power BI` `DAX` `Data modeling (schéma en étoile)`

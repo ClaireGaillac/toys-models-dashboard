@@ -9,7 +9,11 @@ Je transforme l'OLTP en OLAP au moyen de vues SQL.
 
 
 ## Vue d'ensemble
-Le schéma du modèle sera une capture d'écran du diagramme Power BI.
+![Modèle en étoile dans Power BI](images/modele_power_bi.png)
+
+Deux tables de faits (`fact_orders`, `fact_payments`) reliées à quatre dimensions partagées, toutes en relation 1 à N et à sens unique.
+Les pointillés sont les relations inactives de `dim_date` vers `requiredDate` et `shippedDate`, activées dans les mesures DAX.
+Les clés des tables de faits sont masquées (œil barré) : l'utilisateur filtre toujours par les dimensions.
 
 
 ## Tables de faits
@@ -91,6 +95,8 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
  | quantityInStock       | `products.quantityInStock`               | Quantité présente en stock        |
  | buyPrice              | `products.buyPrice`                      | Prix d'achat chez le fournisseur  |
  | MSRP                  | `products.MSRP`                          | Prix de vente conseillé           |
+ | stockCostValue        | `quantityInStock * buyPrice`             | Valeur du stock au prix d'achat   |
+ | stockRetailValue      | `quantityInStock * MSRP`                 | Valeur du stock au prix conseillé |
 
 ### `dim_date`
 - **Rôle** : Recense tous les jours, du 1er janvier de l'année la plus ancienne au 31 décembre de l'année la plus récente (commandes et paiements confondus), soit actuellement du 01/01/2022 au 31/12/2024 (1 096 jours).
@@ -105,6 +111,7 @@ Le schéma du modèle sera une capture d'écran du diagramme Power BI.
  | monthName       | `MONTHNAME(calendarDate)`          | Nom du mois         |
  | dayOfMonth      | `DAY(calendarDate)`                | Jour dans le mois   |
  | dayName         | `DAYNAME(calendarDate)`            | Jour de la semaine  |
+ | dayOfWeek       | `WEEKDAY(calendarDate) + 1`        | N° du jour (lundi=1)|
 
 
 
@@ -133,3 +140,5 @@ J'ajoute dans `fact_orders` la colonne calculée `salesAmount` (`quantityOrdered
 La première commande a été passée le 21/01/2022 et le dernier paiement a eu lieu le 09/03/2024 : ce sont respectivement la première et la dernière action enregistrées. Les fonctions temporelles de Power BI nécessitant des années complètes, je génère donc les dates du 1er janvier de l'année la plus ancienne au 31 décembre de l'année la plus récente. Ces bornes sont calculées à partir des données, et non écrites en dur : le calendrier s'agrandit ainsi automatiquement quand une nouvelle année commence.
 
 Dans `dim_customers`, j'ai retiré `state` (vide pour la plupart des pays, la ville suffit à situer les clients américains) et ajouté `territory`, le territoire du bureau du vendeur attitré. Le territoire "Japan" est regroupé dans "APAC", car le vendeur de Tokyo suit aussi d'autres pays d'Asie-Pacifique. Les clients sans vendeur, qui n'ont passé aucune commande, sont classés "Unassigned" : ce sont des prospects.
+
+Dans `dim_products`, j'ajoute deux colonnes calculées ligne par ligne : `stockCostValue` (valeur du stock au prix d'achat, l'argent immobilisé) et `stockRetailValue` (valeur marchande estimée, au prix conseillé `MSRP`). Dans `dim_date`, `dayOfWeek` (lundi = 1) sert à trier les jours de la semaine dans l'ordre.

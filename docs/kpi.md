@@ -125,6 +125,10 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **Source** : `orderdetails` (`orderNumber`, `quantityOrdered`)
 **Calcul** : SUM(`quantityOrdered`) par commande
 
+**KPI** : Les ventes varient-elles selon le jour de la semaine, et de la même façon dans tous les bureaux ?
+**Source** : `orders.orderDate` → `dim_date` (`dayName`, `dayOfWeek`) et `offices.city` (via le vendeur du client)
+**Calcul** : `SUM(quantityOrdered * priceEach)` par jour de la semaine et par bureau
+
 ### Logistique
 **KPI** : Délai moyen entre le passage de la commande et la date de livraison demandée ?
 **Source** : `orders` (`orderNumber`, `requiredDate`, `orderDate`)
@@ -133,3 +137,4 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **KPI** : Quelle est la valeur du stock immobilisé ?
 **Source** : `products` (`productName`, `productLine`, `quantityInStock`, `buyPrice`)
 **Calcul** : `SUM(quantityInStock * buyPrice)` par article, par catégorie, au total
+**Remarque** : Calculé ligne par ligne dans la vue (`stockCostValue`). J'ajoute aussi la valeur marchande estimée (`stockRetailValue`, au prix conseillé `MSRP`).
