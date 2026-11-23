@@ -37,6 +37,7 @@ Les clés des tables de faits sont masquées (œil barré) : l'utilisateur filtr
  | status          | `orders.status`                                             | État d'avancement       |
  | comments        | `orders.comments`                                           | Commentaire             |
  | salesAmount     | `quantityOrdered * priceEach`                               | Montant de la ligne     |
+ | grossMargin     | `(priceEach - products.buyPrice) * quantityOrdered`         | Marge brute de la ligne |
 
 ### `fact_payments`
 - **Granularité** : une ligne = un paiement ; reliée à un client, à un employé et à un bureau
@@ -112,6 +113,7 @@ Les clés des tables de faits sont masquées (œil barré) : l'utilisateur filtr
  | dayOfMonth      | `DAY(calendarDate)`                | Jour dans le mois   |
  | dayName         | `DAYNAME(calendarDate)`            | Jour de la semaine  |
  | dayOfWeek       | `WEEKDAY(calendarDate) + 1`        | N° du jour (lundi=1)|
+ | isPastDate      | `calendarDate <= MAX(orderDate)`   | 1 si date passée    |
 
 
 
@@ -141,4 +143,6 @@ La première commande a été passée le 21/01/2022 et le dernier paiement a eu 
 
 Dans `dim_customers`, j'ai retiré `state` (vide pour la plupart des pays, la ville suffit à situer les clients américains) et ajouté `territory`, le territoire du bureau du vendeur attitré. Le territoire "Japan" est regroupé dans "APAC", car le vendeur de Tokyo suit aussi d'autres pays d'Asie-Pacifique. Les clients sans vendeur, qui n'ont passé aucune commande, sont classés "Unassigned" : ce sont des prospects.
 
-Dans `dim_products`, j'ajoute deux colonnes calculées ligne par ligne : `stockCostValue` (valeur du stock au prix d'achat, l'argent immobilisé) et `stockRetailValue` (valeur marchande estimée, au prix conseillé `MSRP`). Dans `dim_date`, `dayOfWeek` (lundi = 1) sert à trier les jours de la semaine dans l'ordre.
+Dans `dim_products`, j'ajoute deux colonnes calculées ligne par ligne : `stockCostValue` (valeur du stock au prix d'achat, l'argent immobilisé) et `stockRetailValue` (valeur marchande estimée, au prix conseillé `MSRP`). Dans `dim_date`, `dayOfWeek` (lundi = 1) sert à trier les jours de la semaine dans l'ordre, et `isPastDate` (1 si la date est antérieure ou égale à la dernière commande) permet de comparer des périodes équivalentes d'une année sur l'autre et de masquer les mois futurs.
+
+J'ajoute aussi dans `fact_orders` la colonne `grossMargin`, la marge brute de chaque ligne (`(priceEach - buyPrice) * quantityOrdered`), grâce à une jointure vers `products` qui ne change pas le nombre de lignes. La multiplication par la quantité se fait ligne par ligne : multiplier la somme des marges unitaires par la somme des quantités donnerait un résultat faux. Limite : `buyPrice` est le prix d'achat actuel, pas celui de l'époque de la vente.

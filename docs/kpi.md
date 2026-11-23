@@ -10,8 +10,8 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 ### Ventes
 **KPI** : Chiffre d’affaires par mois et par région
 **Source** : `orderdetails` (`quantityOrdered`, `priceEach`) → `orders` (`orderDate` , `customerNumber`) → `customers.city`
-**Calcul** : `SUM(quantityOrdered * priceEach)` par mois et par zone
-**Remarque** : Il n'y a pas de colonne région. Je crée donc une hiérarchie (territoire → pays → ville) dans Power BI (drill-down), qui laisse le directeur choisir son niveau de lecture.
+**Calcul** : `SUM(quantityOrdered * priceEach)` par mois et par pays
+**Remarque** : Il n'y a pas de colonne région : je l'afficherai par pays du client. Le CA ne retient que les commandes expédiées ou résolues (statuts Shipped et Resolved) : les commandes annulées ou en attente en sont exclues.
 
 **KPI** : Taux d’évolution mensuel : suivre les revenus générés par région et par mois pour identifier les tendances géographiques.
 **Source** : `orderdetails` (`quantityOrdered`, `priceEach`) → `orders` (`orderDate` , `customerNumber`) → `customers.city`
@@ -50,7 +50,7 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **KPI** : Marge brute par produit et par catégorie, pour en déduire les produits et catégories les plus/moins rentables.
 **Source** : `products` (`productCode`, `productName`, `productLine`, `buyPrice`) → `orderdetails` (`priceEach`)
 **Calcul** : marge unitaire = `orderdetails.priceEach` - `products.buyPrice` ; marge totale = `SUM((priceEach - buyPrice) × quantityOrdered)`
-**Remarque** : `priceEach` est le prix réellement payé et `MSRP` le prix conseillé : je choisis donc le prix réel plutôt que le prix théorique.
+**Remarque** : `priceEach` est le prix réellement payé et `MSRP` le prix conseillé : je choisis donc le prix réel plutôt que le prix théorique. La marge de chaque ligne est calculée dans la vue (`grossMargin`), puis additionnée en DAX avec les mêmes statuts que le CA. Limite : `buyPrice` est le prix d'achat actuel, pas celui de l'époque de la vente.
 
 ### Finances
 **KPI** : Taux de recouvrement des créances par client : identifier les clients ayant un montant élevé de commandes non payées.
