@@ -38,6 +38,7 @@ Les clés des tables de faits sont masquées (œil barré) : l'utilisateur filtr
  | comments        | `orders.comments`                                           | Commentaire             |
  | salesAmount     | `quantityOrdered * priceEach`                               | Montant de la ligne     |
  | grossMargin     | `(priceEach - products.buyPrice) * quantityOrdered`         | Marge brute de la ligne |
+ | processingDays  | `DATEDIFF(shippedDate, orderDate)`                          | Délai de traitement (j) |
 
 ### `fact_payments`
 - **Granularité** : une ligne = un paiement ; reliée à un client, à un employé et à un bureau
@@ -146,3 +147,5 @@ Dans `dim_customers`, j'ai retiré `state` (vide pour la plupart des pays, la vi
 Dans `dim_products`, j'ajoute deux colonnes calculées ligne par ligne : `stockCostValue` (valeur du stock au prix d'achat, l'argent immobilisé) et `stockRetailValue` (valeur marchande estimée, au prix conseillé `MSRP`). Dans `dim_date`, `dayOfWeek` (lundi = 1) sert à trier les jours de la semaine dans l'ordre, et `isPastDate` (1 si la date est antérieure ou égale à la dernière commande) permet de comparer des périodes équivalentes d'une année sur l'autre et de masquer les mois futurs.
 
 J'ajoute aussi dans `fact_orders` la colonne `grossMargin`, la marge brute de chaque ligne (`(priceEach - buyPrice) * quantityOrdered`), grâce à une jointure vers `products` qui ne change pas le nombre de lignes. La multiplication par la quantité se fait ligne par ligne : multiplier la somme des marges unitaires par la somme des quantités donnerait un résultat faux. Limite : `buyPrice` est le prix d'achat actuel, pas celui de l'époque de la vente.
+
+J'ajoute dans `fact_orders` la colonne `processingDays` (`DATEDIFF(shippedDate, orderDate)`), le délai de traitement en jours. Elle vaut NULL pour les commandes non expédiées, ce qui les exclut des moyennes ; en DAX, une date vide vaudrait 0 et fausserait le calcul. Comme le délai se répète sur chaque ligne d'une commande, la moyenne est calculée par commande en DAX (AVERAGEX sur les numéros de commande), et non par ligne.

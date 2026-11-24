@@ -62,6 +62,7 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **KPI** : Durée moyenne de traitement des commandes, et commandes dont le délai dépasse cette moyenne
 **Source** : `orders` (`orderNumber`, `orderDate`, `shippedDate`)
 **Calcul** : AVG(`shippedDate`-`orderDate`)
+**Remarque** : Le délai est calculé dans la vue (`processingDays`, NULL si la commande n'est pas expédiée), puis moyenné par commande en DAX : une moyenne par ligne donnerait plus de poids aux commandes contenant beaucoup de références.
 
 
 ## KPI optionnels
