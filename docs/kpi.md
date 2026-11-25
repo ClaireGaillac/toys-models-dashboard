@@ -135,6 +135,7 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **KPI** : Délai moyen entre le passage de la commande et la date de livraison demandée ?
 **Source** : `orders` (`orderNumber`, `requiredDate`, `orderDate`)
 **Calcul** : `requiredDate - orderDate`
+**Remarque** : Calculé dans la vue (`leadTimeDays`), puis moyenné par commande en DAX, comme le délai de traitement. À comparer avec le délai de traitement moyen : l'écart montre la marge de manœuvre dont dispose la logistique.
 
 **KPI** : Quelle est la valeur du stock immobilisé ?
 **Source** : `products` (`productName`, `productLine`, `quantityInStock`, `buyPrice`)
