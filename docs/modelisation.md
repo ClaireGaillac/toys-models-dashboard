@@ -39,6 +39,7 @@ Les clés des tables de faits sont masquées (œil barré) : l'utilisateur filtr
  | salesAmount     | `quantityOrdered * priceEach`                               | Montant de la ligne     |
  | grossMargin     | `(priceEach - products.buyPrice) * quantityOrdered`         | Marge brute de la ligne |
  | processingDays  | `DATEDIFF(shippedDate, orderDate)`                          | Délai de traitement (j) |
+ | lateDays        | `DATEDIFF(shippedDate, requiredDate)`                       | Retard d'expédition (j) |
 
 ### `fact_payments`
 - **Granularité** : une ligne = un paiement ; reliée à un client, à un employé et à un bureau
@@ -149,3 +150,5 @@ Dans `dim_products`, j'ajoute deux colonnes calculées ligne par ligne : `stockC
 J'ajoute aussi dans `fact_orders` la colonne `grossMargin`, la marge brute de chaque ligne (`(priceEach - buyPrice) * quantityOrdered`), grâce à une jointure vers `products` qui ne change pas le nombre de lignes. La multiplication par la quantité se fait ligne par ligne : multiplier la somme des marges unitaires par la somme des quantités donnerait un résultat faux. Limite : `buyPrice` est le prix d'achat actuel, pas celui de l'époque de la vente.
 
 J'ajoute dans `fact_orders` la colonne `processingDays` (`DATEDIFF(shippedDate, orderDate)`), le délai de traitement en jours. Elle vaut NULL pour les commandes non expédiées, ce qui les exclut des moyennes ; en DAX, une date vide vaudrait 0 et fausserait le calcul. Comme le délai se répète sur chaque ligne d'une commande, la moyenne est calculée par commande en DAX (AVERAGEX sur les numéros de commande), et non par ligne.
+
+J'ajoute aussi `lateDays` (`DATEDIFF(shippedDate, requiredDate)`), l'écart en jours entre l'expédition et la date demandée par le client : positif en cas de retard, négatif en cas d'avance, NULL si la commande n'est pas encore expédiée. Le taux de commandes en retard est calculé par commande en DAX, en ne gardant au dénominateur que les commandes expédiées.

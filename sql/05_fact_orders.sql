@@ -11,6 +11,9 @@
           - Ajout de `processingDays` (DATEDIFF(shippedDate, orderDate)) : le délai de traitement en jours. Il vaut NULL
             pour les commandes non expédiées, ce qui les exclut automatiquement des moyennes. Le délai est identique
             sur toutes les lignes d'une commande : la moyenne se calcule par commande en DAX, pas par ligne.
+          - Ajout de `lateDays` (DATEDIFF(shippedDate, requiredDate)) : l'écart en jours entre l'expédition et la date
+            demandée par le client. Positif = retard, négatif = expédiée en avance, NULL = pas encore expédiée.
+            Le taux de retard se calcule par commande en DAX, sur les seules commandes expédiées.
   Limite : `buyPrice` est le prix d'achat actuel, pas celui en vigueur au moment de chaque vente : la marge des
            ventes anciennes est approximative si les prix fournisseurs ont changé.
   */
@@ -19,7 +22,7 @@
   SELECT od.orderNumber, o.customerNumber, c.salesRepEmployeeNumber AS employeeNumber, od.productCode, od.quantityOrdered, 
   od.priceEach, o.orderDate, o.requiredDate, o.shippedDate, o.status, o.comments, 
   (od.priceEach - p.buyPrice) * od.quantityOrdered AS grossMargin, (od.quantityOrdered * od.priceEach) AS salesAmount, 
-  DATEDIFF(o.shippedDate, o.orderDate) AS processingDays
+  DATEDIFF(o.shippedDate, o.orderDate) AS processingDays, DATEDIFF(o.shippedDate, o.requiredDate) AS lateDays
   FROM orderdetails AS od
   LEFT JOIN orders AS o ON od.orderNumber = o.orderNumber
   LEFT JOIN customers AS c ON o.customerNumber = c.customerNumber

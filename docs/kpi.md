@@ -104,6 +104,7 @@ Analyse de faisabilité des différents KPI, ceux exigés et ceux que je propose
 **KPI** : Taux de commandes livrées en retard : identifier les problèmes logistiques et améliorer les délais de livraison.
 **Source** : `orders` (`orderNumber`, `requiredDate`, `shippedDate`, `comments`)
 **Calcul** : `shippedDate - requiredDate` 
+**Remarque** : L'écart est calculé dans la vue (`lateDays`). Le taux = commandes avec `lateDays` > 0 / commandes expédiées (les commandes non expédiées ne sont ni en retard ni à l'heure). `shippedDate` est la date d'envoi, pas de réception : c'est un retard d'expédition, la date de livraison réelle n'étant pas connue.
 
 
 
